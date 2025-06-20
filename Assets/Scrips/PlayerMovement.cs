@@ -1,38 +1,43 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
 {
     public float walkSpeed = 4f;
-    public float runSpeed = 8f;
     public float jumpHeight = 1.5f;
     public float gravity = -20f;
 
-    public Transform cameraHolder; // C·mara principal
+    public Transform cameraHolder;
 
     private CharacterController controller;
+    private Animator animator;
     private Vector3 velocity;
     private bool isGrounded;
+    private bool jumping = false;
+    private float saltoDuracion = 0.8f; // Ajusta esto a la duraci√≥n real de tu animaci√≥n
+    private float saltoTimer = 0f;
 
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        animator = GetComponent<Animator>();
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
     void Update()
     {
-        // Comprobar si est· en el suelo
         isGrounded = controller.isGrounded;
-        if (isGrounded && velocity.y < 0)
-            velocity.y = -2f;
 
-        // Input
+        if (isGrounded && velocity.y < 0)
+        {
+            velocity.y = -2f;
+        }
+
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
-        // DirecciÛn relativa a la c·mara
         Vector3 camForward = cameraHolder.forward;
         Vector3 camRight = cameraHolder.right;
         camForward.y = 0f;
@@ -42,7 +47,6 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 move = camRight * x + camForward * z;
 
-        // Si hay movimiento, rotar hacia Èl
         if (move.magnitude >= 0.1f)
         {
             float targetAngle = Mathf.Atan2(move.x, move.z) * Mathf.Rad2Deg;
@@ -50,18 +54,51 @@ public class PlayerMovement : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
         }
 
-        // Movimiento
-        float speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
-        controller.Move(move.normalized * speed * Time.deltaTime);
+        controller.Move(move.normalized * walkSpeed * Time.deltaTime);
 
-        // Saltar
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        // SALTO
+        if (Input.GetButtonDown("Jump") && isGrounded && !jumping)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            jumping = true;
+            saltoTimer = saltoDuracion;
+            animator.Play("Salto");
         }
 
         // Gravedad
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
+
+        // ‚è≥ Esperar que termine animaci√≥n de salto
+        if (jumping)
+        {
+            saltoTimer -= Time.deltaTime;
+            if (saltoTimer <= 0f && isGrounded)
+            {
+                jumping = false;
+
+                // Volver a caminar o quieto despu√©s del salto
+                if (move.magnitude >= 0.1f)
+                {
+                    animator.Play("caminar");
+                }
+                else
+                {
+                    animator.Play("Quieto");
+                }
+            }
+        }
+        else
+        {
+            // Si no estamos en salto, controlar animaciones normales
+            if (move.magnitude >= 0.1f)
+            {
+                animator.Play("caminarh");
+            }
+            else
+            {
+                animator.Play("Quieto");
+            }
+        }
     }
 }
