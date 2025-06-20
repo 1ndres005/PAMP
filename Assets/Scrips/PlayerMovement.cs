@@ -30,6 +30,8 @@ public class PlayerMovement : MonoBehaviour
     {
         isGrounded = controller.isGrounded;
 
+        animator.SetBool("Grounded", isGrounded);
+
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
@@ -54,7 +56,12 @@ public class PlayerMovement : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
         }
 
-        controller.Move(move.normalized * walkSpeed * Time.deltaTime);
+        move = move.normalized * walkSpeed;
+
+        move.y = 0;
+
+        velocity.x = move.x;
+        velocity.z = move.z;
 
         // SALTO
         if (Input.GetButtonDown("Jump") && isGrounded && !jumping)
@@ -62,11 +69,11 @@ public class PlayerMovement : MonoBehaviour
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
             jumping = true;
             saltoTimer = saltoDuracion;
-            animator.Play("Salto");
         }
 
         // Gravedad
         velocity.y += gravity * Time.deltaTime;
+
         controller.Move(velocity * Time.deltaTime);
 
         // ⏳ Esperar que termine animación de salto
@@ -76,29 +83,9 @@ public class PlayerMovement : MonoBehaviour
             if (saltoTimer <= 0f && isGrounded)
             {
                 jumping = false;
+            }
+        }
 
-                // Volver a caminar o quieto después del salto
-                if (move.magnitude >= 0.1f)
-                {
-                    animator.Play("caminar");
-                }
-                else
-                {
-                    animator.Play("Quieto");
-                }
-            }
-        }
-        else
-        {
-            // Si no estamos en salto, controlar animaciones normales
-            if (move.magnitude >= 0.1f)
-            {
-                animator.Play("caminarh");
-            }
-            else
-            {
-                animator.Play("Quieto");
-            }
-        }
+        animator.SetFloat("Speed", Mathf.Lerp(animator.GetFloat("Speed"), move.magnitude != 0 ? 1 : 0, 10 * Time.deltaTime));
     }
 }
