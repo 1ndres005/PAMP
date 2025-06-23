@@ -7,7 +7,7 @@
       "RelativeMoniker": "D:0:0:{57451496-CC94-FE81-2054-24D70538CF07}|Assembly-CSharp.csproj|solutionrelative:assets\\scrips\\playermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{57451496-CC94-FE81-2054-24D70538CF07}|Assembly-CSharp.csproj|c:\\users\\andre\\desktop\\pamp\\assets\\scrips\\orbitcamera.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{57451496-CC94-FE81-2054-24D70538CF07}|Assembly-CSharp.csproj|C:\\Users\\andre\\Desktop\\PAMP\\assets\\scrips\\orbitcamera.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{57451496-CC94-FE81-2054-24D70538CF07}|Assembly-CSharp.csproj|solutionrelative:assets\\scrips\\orbitcamera.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -28,7 +28,7 @@
               "RelativeDocumentMoniker": "Assets\\Scrips\\PlayerMovement.cs",
               "ToolTip": "C:\\Users\\andre\\Desktop\\PAMP\\Assets\\Scrips\\PlayerMovement.cs",
               "RelativeToolTip": "Assets\\Scrips\\PlayerMovement.cs",
-              "ViewState": "AgIAAEUAAAAAAAAAAAAYwGAAAAANAAAAAAAAAA==",
+              "ViewState": "AgIAAEAAAAAAAAAAAAAswGIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-19T23:19:53.992Z",
               "EditorCaption": ""
@@ -43,8 +43,7 @@
               "RelativeToolTip": "Assets\\Scrips\\OrbitCamera.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAADQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-19T20:04:26.438Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-19T20:04:26.438Z"
             }
           ]
         }

@@ -4,6 +4,7 @@
 public class PlayerMovement : MonoBehaviour
 {
     public float walkSpeed = 4f;
+    public float runSpeed = 8f; // Velocidad para correr
     public float jumpHeight = 1.5f;
     public float gravity = -20f;
 
@@ -14,7 +15,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 velocity;
     private bool isGrounded;
     private bool jumping = false;
-    private float saltoDuracion = 0.8f; // Ajusta esto a la duración real de tu animación
+    private float saltoDuracion = 0.8f;
     private float saltoTimer = 0f;
 
     void Start()
@@ -29,7 +30,6 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         isGrounded = controller.isGrounded;
-
         animator.SetBool("Grounded", isGrounded);
 
         if (isGrounded && velocity.y < 0)
@@ -56,12 +56,14 @@ public class PlayerMovement : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
         }
 
-        move = move.normalized * walkSpeed;
+        // Detectar si se presiona Shift
+        float currentSpeed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
 
-        move.y = 0;
+        Vector3 moveDirection = move.normalized * currentSpeed;
+        moveDirection.y = 0;
 
-        velocity.x = move.x;
-        velocity.z = move.z;
+        velocity.x = moveDirection.x;
+        velocity.z = moveDirection.z;
 
         // SALTO
         if (Input.GetButtonDown("Jump") && isGrounded && !jumping)
@@ -73,10 +75,8 @@ public class PlayerMovement : MonoBehaviour
 
         // Gravedad
         velocity.y += gravity * Time.deltaTime;
-
         controller.Move(velocity * Time.deltaTime);
 
-        // ⏳ Esperar que termine animación de salto
         if (jumping)
         {
             saltoTimer -= Time.deltaTime;
@@ -86,6 +86,13 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        animator.SetFloat("Speed", Mathf.Lerp(animator.GetFloat("Speed"), move.magnitude != 0 ? 1 : 0, 10 * Time.deltaTime));
+        // Parámtero de animación adaptado al Blend Tree: 0 = quieto, 0.5 = caminar, 1 = correr
+        float speedPercent = 0f;
+        if (move.magnitude > 0.1f)
+        {
+            speedPercent = Input.GetKey(KeyCode.LeftShift) ? 1f : 0.5f;
+        }
+
+        animator.SetFloat("Speed", Mathf.Lerp(animator.GetFloat("Speed"), speedPercent, 10 * Time.deltaTime));
     }
 }
